@@ -24,5 +24,5 @@ score '>' = 25137
 main :: IO ()
 main = do
   input <- getContents
-  let corruptChars = map parseline $ lines input
-  print $ sum $ map score [c | Just c <- corruptChars]
+  let corruptChars = mapMaybe parseline $ lines input
+  print $ sum $ map score corruptChars
