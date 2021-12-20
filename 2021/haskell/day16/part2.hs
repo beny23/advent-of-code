@@ -38,33 +38,6 @@ p_bin = oneOf "01"
 p_ver :: Parsec String () String
 p_ver = count 3 p_bin
 
-p_type :: Parsec String () String
-p_type = count 3 p_bin
-
-p_group :: Parsec String () String
-p_group = char '1' >> count 4 p_bin
-
-p_lastgroup :: Parsec String () String
-p_lastgroup = char '0' >> count 4 p_bin
-
-p_type_lit :: Parsec String () String
-p_type_lit = string "100"
-
-p_type_op :: Parsec String () String
-p_type_op = string "110"
-
-p_len_t_15 :: Parsec String () Char
-p_len_t_15 = char '0'
-
-p_len_t_11 :: Parsec String () Char
-p_len_t_11 = char '1'
-
-p_len_11 :: Parsec String () String
-p_len_11 = count 11 p_bin
-
-p_len_15 :: Parsec String () String
-p_len_15 = count 15 p_bin
-
 p_position :: Int -> Parsec String () [a]
 p_position n = do
   pos <- getPosition
@@ -74,14 +47,14 @@ p_position n = do
 p_lit :: Parsec String () Packet
 p_lit = do
   ver <- p_ver
-  p_type_lit
-  gs <- many p_group
-  lg <- p_lastgroup
+  string "100"
+  gs <- many $ char '1' >> count 4 p_bin
+  lg <- char '0' >> count 4 p_bin
   return (Lit (bin2dec ver) (bin2dec ((concat gs) ++ lg))) 
 
 p_op_by_len :: Parsec String () [Packet]
 p_op_by_len = do
-  len <- try p_len_t_15 >> p_len_15
+  len <- try (char '0') >> count 15 p_bin
   pos <- getPosition
   let nextN = (sourceColumn pos) + (bin2dec len)
   ps <- manyTill p_packet $ p_position nextN
@@ -89,14 +62,14 @@ p_op_by_len = do
 
 p_op_by_num :: Parsec String () [Packet]
 p_op_by_num = do
-  len <- try p_len_t_11 >> p_len_11
+  len <- try (char '1') >> count 11 p_bin
   ps <- count (bin2dec len) p_packet
   return ps
 
 p_op :: Parsec String () Packet
 p_op = do 
   ver <- p_ver
-  typeId <- p_type
+  typeId <- count 3 p_bin
   ps <- p_op_by_len <|> p_op_by_num
   return (Op (bin2dec ver) (bin2dec typeId) ps)
 
@@ -120,7 +93,7 @@ evaluateAll :: ([Int] -> Int) -> [Packet] -> Int
 evaluateAll f ps = f $ map evaluate ps
 
 boolOp :: (Int -> Int -> Bool) -> [Int] -> Int
-boolOp f xs = bool2num $ f (head xs) (head $ tail xs)
+boolOp f [a, b] = bool2num $ f a b
 
 bool2num :: Bool -> Int
 bool2num True = 1
