@@ -1,4 +1,4 @@
-module Part1x where
+module Part1 where
 
 import Common
 import qualified Data.Set as S

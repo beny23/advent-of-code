@@ -1,4 +1,4 @@
-module Part1 where
+module Part2 where
 
 import Common
 
