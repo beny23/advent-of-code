@@ -24,7 +24,9 @@ checkGameover :: (GameStatus, Int) -> Bool
 checkGameover (((_, score1), (_, score2)), _) = max score1 score2 >= 21
 
 dedupe :: [(GameStatus, Int)] -> [(GameStatus, Int)]
-dedupe gs = map (\gs -> (fst $ head gs, sum $ map snd gs)) $ groupBy (\a b -> (fst a) == (fst b)) $ sort gs
+dedupe = map (\gs -> (fst $ head gs, sum $ map snd gs))
+       . groupBy (\a b -> (fst a) == (fst b))
+       . sort
 
 play :: Int -> [(GameStatus, Int)] -> [Int]
 play player games =
