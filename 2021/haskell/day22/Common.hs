@@ -92,8 +92,7 @@ dedupe = filter ((/=0) . snd)
        . sort
 
 dump :: Cube -> [Vec]
-dump xs =
-  let [[x1,x2], [y1,y2], [z1,z2]] = map sort $ transpose $ xs
-  in [[x,y,z] | x <- [x1..x2-1],
-                y <- [y1..y2-1],
-                z <- [z1..z2-1]]
+dump [[x1,y1,z1], [x2,y2,z2]] =
+  [[x,y,z] | x <- [x1..x2-1],
+             y <- [y1..y2-1],
+             z <- [z1..z2-1]]
