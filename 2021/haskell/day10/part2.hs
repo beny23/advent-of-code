@@ -13,7 +13,7 @@ parseline' (')':cs) ('(':ss) = parseline' cs ss
 parseline' ('>':cs) ('<':ss) = parseline' cs ss
 parseline' (']':cs) ('[':ss) = parseline' cs ss
 parseline' ('}':cs) ('{':ss) = parseline' cs ss
-parseline' (c:cs) _ = ""
+parseline' (c:cs) _ = []
 parseline' _ ss  = ss
 
 score :: Char -> Int

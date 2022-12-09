@@ -4,10 +4,8 @@ parseline :: String -> Maybe Char
 parseline xs = parseline' xs []
 
 parseline' :: String -> String -> Maybe Char
-parseline' ('(':cs) ss = parseline' cs ('(':ss)
-parseline' ('<':cs) ss = parseline' cs ('<':ss)
-parseline' ('[':cs) ss = parseline' cs ('[':ss)
-parseline' ('{':cs) ss = parseline' cs ('{':ss)
+parseline' (c:cs) ss
+  | c `elem` "(<[{" = parseline' cs (c:ss)
 parseline' (')':cs) ('(':ss) = parseline' cs ss
 parseline' ('>':cs) ('<':ss) = parseline' cs ss
 parseline' (']':cs) ('[':ss) = parseline' cs ss
