@@ -16,7 +16,6 @@ program day01_2
         ! Exit if end of file is reached
         if (io /= 0) exit
 
-        print *, pos, ",", zeros, ",", dir, ",", clicks
         if (dir == "L") then
             new_pos = pos - clicks
             if (new_pos <= 0) then
